@@ -1,6 +1,6 @@
 package com.example.lab.spring.reactive.web.spring.data.po;
 
-import com.example.lab.spring.reactive.web.app.domain.MessageStatus;
+import com.example.lab.spring.reactive.web.app.domain.ChatroomStatus;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -10,18 +10,13 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.Instant;
 
 @Data
-@Table(name = "MESSAGE")
-public class MessagePo {
+@Table(name = "CHATROOM")
+public class ChatroomPo {
 
 	@Id
 	private Long id;
 
-	@Column("CHATROOM_ID")
-	private Long chatroomId;
-
-	private String content;
-
-	private MessageStatus status;
+	private ChatroomStatus status;
 
 	@CreatedDate
 	@Column("CREATE_TIME")
