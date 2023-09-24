@@ -30,8 +30,8 @@ public class MessageRepository implements MessageDataGateway {
 		return messageDao.save(message).map(MessagePo::getId);
 	}
 
-	public Flux<MessagePo> findAllByChatroomId(Long chatroomId) {
-		return chatroomDao.findById(chatroomId)
+	public Flux<MessagePo> findAllByChatroomId(Integer userId, Long chatroomId) {
+		return chatroomDao.findByChatroomIdAndChatroomUserId(chatroomId, userId)
 			.switchIfEmpty(Mono.error(new ServerWebInputException("chatroom not found")))
 			.map(chatroom -> messageDao.findAllByChatroomId(chatroom.getId()))
 			.switchIfEmpty(Mono.error(new ServerWebInputException("message not found")))

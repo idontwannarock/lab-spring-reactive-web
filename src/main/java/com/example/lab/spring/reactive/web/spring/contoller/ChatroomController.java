@@ -57,7 +57,8 @@ public class ChatroomController {
 
 	@GetMapping(path = "{chatroomId}/messages")
 	Flux<MessageResponse> findById(
+		@AuthenticationPrincipal AuthenticatedUser currentUser,
 		@NotBlank @PathVariable Long chatroomId) {
-		return messageRepository.findAllByChatroomId(chatroomId).map(messageMapper::toResponse);
+		return messageRepository.findAllByChatroomId(currentUser.getUserId(), chatroomId).map(messageMapper::toResponse);
 	}
 }
