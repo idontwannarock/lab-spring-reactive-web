@@ -12,6 +12,8 @@ import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Instant;
+
 @RequiredArgsConstructor
 @Component
 public class MessageRepository implements MessageDataGateway {
@@ -27,6 +29,7 @@ public class MessageRepository implements MessageDataGateway {
 		message.setContent(content);
 		message.setStatus(MessageStatus.ACTIVE);
 		message.setCreatorId(creatorId);
+		message.setCreateTime(Instant.now());
 		return messageDao.save(message).map(MessagePo::getId);
 	}
 
