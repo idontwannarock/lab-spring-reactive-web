@@ -53,5 +53,5 @@ The base64 encoded secret is set to `jwt.secret-key` properties in application p
 Here is a jwt for testing expired until 2050.
 
 ```plaintext
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE2OTU0MjcyMDAsImV4cCI6MjUyNDYwODAwMH0.brLZ1wgbp2ZmSMkSN8Lt8ONSw4xLCT6s1NlaKHEhR0Q
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInVzZXJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOjE1MTYyMzkwMjJ9.NCNUXdkc0uYwC0RzNWkMqBmzLkum8R617Q7IME3lmUo
 ```
