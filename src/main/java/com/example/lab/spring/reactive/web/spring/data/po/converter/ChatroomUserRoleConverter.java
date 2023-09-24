@@ -8,6 +8,8 @@ import org.springframework.lang.NonNull;
 
 public final class ChatroomUserRoleConverter {
 
+	private ChatroomUserRoleConverter() {}
+
 	@WritingConverter
 	public static final class WriteConverter implements Converter<ChatroomUserRole, Integer> {
 
