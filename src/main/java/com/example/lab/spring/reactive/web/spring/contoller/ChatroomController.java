@@ -11,7 +11,7 @@ import com.example.lab.spring.reactive.web.spring.contoller.response.MessageResp
 import com.example.lab.spring.reactive.web.spring.repository.ChatroomRepository;
 import com.example.lab.spring.reactive.web.spring.repository.MessageRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -50,15 +50,15 @@ public class ChatroomController {
 	@PostMapping(path = "{chatroomId}/messages")
 	Mono<Long> createMessage(
 		@AuthenticationPrincipal AuthenticatedUser currentUser,
-		@NotBlank @PathVariable Long chatroomId,
+		@NotNull @PathVariable Long chatroomId,
 		@Valid @RequestBody CreateMessageRequest request) {
 		return createMessageUseCase.create(currentUser.getUserId(), chatroomId, request.getContent());
 	}
 
 	@GetMapping(path = "{chatroomId}/messages")
-	Flux<MessageResponse> findById(
+	Flux<MessageResponse> findMessagesById(
 		@AuthenticationPrincipal AuthenticatedUser currentUser,
-		@NotBlank @PathVariable Long chatroomId) {
+		@NotNull @PathVariable Long chatroomId) {
 		return messageRepository.findAllByChatroomId(currentUser.getUserId(), chatroomId).map(messageMapper::toResponse);
 	}
 }
