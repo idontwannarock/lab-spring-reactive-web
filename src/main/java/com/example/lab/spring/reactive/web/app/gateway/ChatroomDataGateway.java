@@ -4,5 +4,5 @@ import reactor.core.publisher.Mono;
 
 public interface ChatroomDataGateway {
 
-	Mono<Long> createChatroom();
+	Mono<Long> createChatroom(Integer creatorId);
 }

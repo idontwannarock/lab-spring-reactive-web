@@ -4,5 +4,5 @@ import reactor.core.publisher.Mono;
 
 public interface CreateMessageUseCase {
 
-	Mono<Long> create(Long chatroomId, String content);
+	Mono<Long> create(Integer userId, Long chatroomId, String content);
 }

@@ -4,5 +4,5 @@ import reactor.core.publisher.Mono;
 
 public interface MessageDataGateway {
 
-	Mono<Long> createMessage(Long chatroomId, String content);
+	Mono<Long> createMessage(Integer creatorId, Long chatroomId, String content);
 }

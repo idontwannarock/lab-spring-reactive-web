@@ -7,5 +7,6 @@ import java.time.Instant;
 public record ChatroomResponse(
 	Long id,
 	ChatroomStatus status,
+	Integer creatorId,
 	Instant createTime
 ) {}

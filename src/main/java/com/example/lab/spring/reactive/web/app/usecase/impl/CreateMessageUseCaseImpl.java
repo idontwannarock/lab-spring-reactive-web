@@ -13,7 +13,7 @@ public class CreateMessageUseCaseImpl implements CreateMessageUseCase {
 	private final MessageDataGateway messageDataGateway;
 
 	@Override
-	public Mono<Long> create(Long chatroomId, String content) {
-		return messageDataGateway.createMessage(chatroomId, content);
+	public Mono<Long> create(Integer creatorId, Long chatroomId, String content) {
+		return messageDataGateway.createMessage(creatorId, chatroomId, content);
 	}
 }

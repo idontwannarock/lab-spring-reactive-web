@@ -8,5 +8,6 @@ public record MessageResponse(
 	Long id,
 	String content,
 	MessageStatus status,
+	Integer creatorId,
 	Instant createTime
 ) {}

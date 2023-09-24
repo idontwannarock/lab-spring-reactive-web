@@ -18,13 +18,14 @@ public class ChatroomRepository implements ChatroomDataGateway {
 
 	@Transactional
 	@Override
-	public Mono<Long> createChatroom() {
+	public Mono<Long> createChatroom(Integer creatorId) {
 		var chatroom = new ChatroomPo();
 		chatroom.setStatus(ChatroomStatus.ACTIVE);
+		chatroom.setCreatorId(creatorId);
 		return chatroomDao.save(chatroom).map(ChatroomPo::getId);
 	}
 
-	public Flux<ChatroomPo> findAll() {
-		return chatroomDao.findAll();
+	public Flux<ChatroomPo> findAll(Integer userId) {
+		return chatroomDao.findAllByCreatorId(userId);
 	}
 }

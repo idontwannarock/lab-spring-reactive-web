@@ -21,11 +21,12 @@ public class MessageRepository implements MessageDataGateway {
 
 	@Transactional
 	@Override
-	public Mono<Long> createMessage(Long chatroomId, String content) {
+	public Mono<Long> createMessage(Integer creatorId, Long chatroomId, String content) {
 		var message = new MessagePo();
 		message.setChatroomId(chatroomId);
 		message.setContent(content);
 		message.setStatus(MessageStatus.ACTIVE);
+		message.setCreatorId(creatorId);
 		return messageDao.save(message).map(MessagePo::getId);
 	}
 
