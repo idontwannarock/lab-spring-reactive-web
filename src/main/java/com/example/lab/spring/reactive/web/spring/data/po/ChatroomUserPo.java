@@ -14,9 +14,11 @@ import java.time.Instant;
 @Table(name = "CHATROOM_USER")
 public class ChatroomUserPo {
 
+	@Id
+	private Long id;
+
 	@NotNull
 	@Column("USER_ID")
-	@Id
 	private Integer userId;
 
 	@NotNull

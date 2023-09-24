@@ -19,11 +19,12 @@ CREATE TABLE CHATROOM
 
 CREATE TABLE CHATROOM_USER
 (
+    ID          SERIAL PRIMARY KEY AUTO_INCREMENT,
     CHATROOM_ID BIGINT                                 NOT NULL,
     USER_ID     INT                                    NOT NULL,
     ROLE        INT                                    NOT NULL,
     CREATE_TIME DATETIME(3) DEFAULT (UTC_TIMESTAMP(3)) NOT NULL,
-    PRIMARY KEY (CHATROOM_ID, USER_ID)
+    UNIQUE KEY (CHATROOM_ID, USER_ID)
 );
 
 CREATE TABLE MESSAGE
