@@ -13,9 +13,12 @@ import java.time.Instant;
 @Table(name = "USER")
 public class UserPo {
 
-	@NotNull
 	@Id
-	private Integer id;
+	private Long id;
+
+	@NotNull
+	@Column("USER_ID")
+	private Integer userId;
 
 	@CreatedDate
 	@Column("CREATE_TIME")
