@@ -29,7 +29,8 @@ class ConnectionConfig {
 		@Value("${spring.r2dbc.name}") String database,
 		@Value("${spring.r2dbc.username}") String username,
 		@Value("${spring.r2dbc.password}") String password,
-		@Value("${spring.r2dbc.connection-timeout-in-seconds}") long connectionTimeout) {
+		@Value("${spring.r2dbc.connection-timeout-in-seconds}") long connectionTimeout,
+		@Value("${logging.connection-detail}") Boolean logConnectionDetail) {
 		ConnectionFactory original = MySqlConnectionFactory.from(MySqlConnectionConfiguration.builder()
 			.host(host)
 			.port(port)
@@ -41,10 +42,13 @@ class ConnectionConfig {
 			.tcpKeepAlive(true)
 			.build());
 
-		QueryExecutionInfoFormatter formatter = QueryExecutionInfoFormatter.showAll();
-		return ProxyConnectionFactory.builder(original)
-			.onAfterQuery(queryInfo -> log.info(formatter.format(queryInfo)))
-			.build();
+		if (Boolean.TRUE.equals(logConnectionDetail)) {
+			QueryExecutionInfoFormatter formatter = QueryExecutionInfoFormatter.showAll();
+			return ProxyConnectionFactory.builder(original)
+				.onAfterQuery(queryInfo -> log.info(formatter.format(queryInfo)))
+				.build();
+		}
+		return original;
 	}
 
 	@Bean
