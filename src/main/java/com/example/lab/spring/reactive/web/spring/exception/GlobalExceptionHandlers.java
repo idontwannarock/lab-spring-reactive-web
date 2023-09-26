@@ -7,10 +7,8 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.ErrorResponse;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -18,11 +16,6 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandlers extends ResponseEntityExceptionHandler {
-
-	@ExceptionHandler(ResponseStatusException.class)
-	public ResponseEntity<ResponsePayload<Void>> handleResponseStatusException(ResponseStatusException e) {
-		return ResponseEntity.status(e.getStatusCode()).body(ResponsePayload.error(ResponsePayload.Status.build(e.getMessage())));
-	}
 
 	// handle Spring Webflux generated exceptions
 	@NonNull
