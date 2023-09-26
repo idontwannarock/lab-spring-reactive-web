@@ -55,4 +55,8 @@ public class ChatroomRepository implements ChatroomDataGateway {
 	public Flux<ChatroomPo> findAll(Integer userId) {
 		return chatroomDao.findAllByCreatorId(userId);
 	}
+
+	public Mono<Boolean> existsById(Long chatroomId) {
+		return chatroomDao.existsById(chatroomId);
+	}
 }

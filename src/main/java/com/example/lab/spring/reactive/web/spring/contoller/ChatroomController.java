@@ -3,6 +3,8 @@ package com.example.lab.spring.reactive.web.spring.contoller;
 import com.example.lab.spring.reactive.web.app.usecase.CreateChatroomUseCase;
 import com.example.lab.spring.reactive.web.app.usecase.CreateMessageUseCase;
 import com.example.lab.spring.reactive.web.spring.config.security.dto.AuthenticatedUser;
+import com.example.lab.spring.reactive.web.spring.contoller.aop.annotation.ChatroomExists;
+import com.example.lab.spring.reactive.web.spring.contoller.aop.annotation.UserExists;
 import com.example.lab.spring.reactive.web.spring.contoller.mapper.ChatroomMapper;
 import com.example.lab.spring.reactive.web.spring.contoller.mapper.MessageMapper;
 import com.example.lab.spring.reactive.web.spring.contoller.request.CreateMessageRequest;
@@ -33,12 +35,14 @@ public class ChatroomController {
 
 	private final CreateChatroomUseCase createChatroomUseCase;
 
+	@UserExists
 	@PostMapping
 	Mono<Long> createChatroom(
 		@AuthenticationPrincipal AuthenticatedUser currentUser) {
 		return createChatroomUseCase.handle(currentUser.getUserId());
 	}
 
+	@UserExists
 	@GetMapping
 	Flux<ChatroomResponse> findAllChatrooms(
 		@AuthenticationPrincipal AuthenticatedUser currentUser) {
@@ -47,6 +51,7 @@ public class ChatroomController {
 
 	private final CreateMessageUseCase createMessageUseCase;
 
+	@ChatroomExists
 	@PostMapping(path = "{chatroomId}/messages")
 	Mono<Long> createMessage(
 		@AuthenticationPrincipal AuthenticatedUser currentUser,
@@ -55,10 +60,11 @@ public class ChatroomController {
 		return createMessageUseCase.create(currentUser.getUserId(), chatroomId, request.getContent());
 	}
 
+	@ChatroomExists
 	@GetMapping(path = "{chatroomId}/messages")
 	Flux<MessageResponse> findMessagesById(
-		@AuthenticationPrincipal AuthenticatedUser currentUser,
+		@AuthenticationPrincipal AuthenticatedUser ignoreUser,
 		@NotNull @PathVariable Long chatroomId) {
-		return messageRepository.findAllByChatroomId(currentUser.getUserId(), chatroomId).map(messageMapper::toResponse);
+		return messageRepository.findAllByChatroomId(chatroomId).map(messageMapper::toResponse);
 	}
 }
