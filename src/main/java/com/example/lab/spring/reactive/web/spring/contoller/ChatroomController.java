@@ -19,8 +19,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Validated
@@ -38,34 +39,41 @@ public class ChatroomController {
 
 	@UserExists
 	@PostMapping
-	ResponsePayload<Mono<Long>> createChatroom(
+	Mono<ResponsePayload<Long>> createChatroom(
 		@AuthenticationPrincipal AuthenticatedUser currentUser) {
-		return ResponsePayload.success(createChatroomUseCase.handle(currentUser.getUserId()));
+		return createChatroomUseCase.handle(currentUser.getUserId())
+			.map(ResponsePayload::success);
 	}
 
 	@UserExists
 	@GetMapping
-	ResponsePayload<Flux<ChatroomResponse>> findAllChatrooms(
+	Mono<ResponsePayload<List<ChatroomResponse>>> findAllChatrooms(
 		@AuthenticationPrincipal AuthenticatedUser currentUser) {
-		return ResponsePayload.success(chatroomRepository.findAll(currentUser.getUserId()).map(chatroomMapper::toResponse));
+		return chatroomRepository.findAll(currentUser.getUserId())
+			.map(chatroomMapper::toResponse)
+			.collectList()
+			.map(ResponsePayload::success);
 	}
 
 	private final CreateMessageUseCase createMessageUseCase;
 
 	@ChatroomExists
 	@PostMapping(path = "{chatroomId}/messages")
-	ResponsePayload<Mono<Long>> createMessage(
+	Mono<ResponsePayload<Long>> createMessage(
 		@AuthenticationPrincipal AuthenticatedUser currentUser,
 		@NotNull @PathVariable Long chatroomId,
 		@Valid @RequestBody CreateMessageRequest request) {
-		return ResponsePayload.success(createMessageUseCase.create(currentUser.getUserId(), chatroomId, request.getContent()));
+		return createMessageUseCase.create(currentUser.getUserId(), chatroomId, request.getContent()).map(ResponsePayload::success);
 	}
 
 	@ChatroomExists
 	@GetMapping(path = "{chatroomId}/messages")
-	ResponsePayload<Flux<MessageResponse>> findMessagesById(
+	Mono<ResponsePayload<List<MessageResponse>>> findMessagesById(
 		@AuthenticationPrincipal AuthenticatedUser ignoreUser,
 		@NotNull @PathVariable Long chatroomId) {
-		return ResponsePayload.success(messageRepository.findAllByChatroomId(chatroomId).map(messageMapper::toResponse));
+		return messageRepository.findAllByChatroomId(chatroomId)
+			.map(messageMapper::toResponse)
+			.collectList()
+			.map(ResponsePayload::success);
 	}
 }
