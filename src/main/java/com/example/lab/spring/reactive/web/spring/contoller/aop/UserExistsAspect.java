@@ -8,7 +8,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
@@ -28,7 +30,9 @@ public class UserExistsAspect extends ValidationAspectBase {
 
 	@Around(value = "pointcut(currentUser)", argNames = "joinPoint,currentUser")
 	public Object checkIsUserExists(ProceedingJoinPoint joinPoint, AuthenticatedUser currentUser) {
-		Mono<Boolean> validation = Mono.justOrEmpty(currentUser.getUserId())
+		Mono<Boolean> validation = Mono.justOrEmpty(currentUser)
+			.switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied")))
+			.map(AuthenticatedUser::getUserId)
 			.switchIfEmpty(Mono.error(new ServerWebInputException("user id is required in jwt")))
 			.map(userRepository::existsById)
 			.flatMap(mono -> mono)

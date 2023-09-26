@@ -10,6 +10,7 @@ import com.example.lab.spring.reactive.web.spring.contoller.mapper.MessageMapper
 import com.example.lab.spring.reactive.web.spring.contoller.request.CreateMessageRequest;
 import com.example.lab.spring.reactive.web.spring.contoller.response.ChatroomResponse;
 import com.example.lab.spring.reactive.web.spring.contoller.response.MessageResponse;
+import com.example.lab.spring.reactive.web.spring.contoller.response.ResponsePayload;
 import com.example.lab.spring.reactive.web.spring.repository.ChatroomRepository;
 import com.example.lab.spring.reactive.web.spring.repository.MessageRepository;
 import jakarta.validation.Valid;
@@ -37,34 +38,34 @@ public class ChatroomController {
 
 	@UserExists
 	@PostMapping
-	Mono<Long> createChatroom(
+	ResponsePayload<Mono<Long>> createChatroom(
 		@AuthenticationPrincipal AuthenticatedUser currentUser) {
-		return createChatroomUseCase.handle(currentUser.getUserId());
+		return ResponsePayload.success(createChatroomUseCase.handle(currentUser.getUserId()));
 	}
 
 	@UserExists
 	@GetMapping
-	Flux<ChatroomResponse> findAllChatrooms(
+	ResponsePayload<Flux<ChatroomResponse>> findAllChatrooms(
 		@AuthenticationPrincipal AuthenticatedUser currentUser) {
-		return chatroomRepository.findAll(currentUser.getUserId()).map(chatroomMapper::toResponse);
+		return ResponsePayload.success(chatroomRepository.findAll(currentUser.getUserId()).map(chatroomMapper::toResponse));
 	}
 
 	private final CreateMessageUseCase createMessageUseCase;
 
 	@ChatroomExists
 	@PostMapping(path = "{chatroomId}/messages")
-	Mono<Long> createMessage(
+	ResponsePayload<Mono<Long>> createMessage(
 		@AuthenticationPrincipal AuthenticatedUser currentUser,
 		@NotNull @PathVariable Long chatroomId,
 		@Valid @RequestBody CreateMessageRequest request) {
-		return createMessageUseCase.create(currentUser.getUserId(), chatroomId, request.getContent());
+		return ResponsePayload.success(createMessageUseCase.create(currentUser.getUserId(), chatroomId, request.getContent()));
 	}
 
 	@ChatroomExists
 	@GetMapping(path = "{chatroomId}/messages")
-	Flux<MessageResponse> findMessagesById(
+	ResponsePayload<Flux<MessageResponse>> findMessagesById(
 		@AuthenticationPrincipal AuthenticatedUser ignoreUser,
 		@NotNull @PathVariable Long chatroomId) {
-		return messageRepository.findAllByChatroomId(chatroomId).map(messageMapper::toResponse);
+		return ResponsePayload.success(messageRepository.findAllByChatroomId(chatroomId).map(messageMapper::toResponse));
 	}
 }

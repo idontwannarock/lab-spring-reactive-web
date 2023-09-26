@@ -36,7 +36,6 @@ public class WebSecurityConfig {
                         .pathMatchers("/webjars/**").permitAll()
                         .pathMatchers("/error").permitAll()
                         .pathMatchers("/actuator/**").permitAll()
-                        .pathMatchers("/api/v1/**").permitAll()
                         .anyExchange().authenticated())
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
