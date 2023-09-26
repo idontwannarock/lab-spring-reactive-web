@@ -18,7 +18,7 @@ public enum MessageStatus {
     }
 
     @JsonCreator
-    public static MessageStatus of(int value) {
+    public static MessageStatus of(Integer value) {
         for (MessageStatus target : MessageStatus.values()) {
             if (target.value == value) {
                 return target;

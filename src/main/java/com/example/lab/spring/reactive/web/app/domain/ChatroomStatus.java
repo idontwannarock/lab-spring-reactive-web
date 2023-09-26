@@ -18,7 +18,7 @@ public enum ChatroomStatus {
 	}
 
 	@JsonCreator
-	public static ChatroomStatus of(int value) {
+	public static ChatroomStatus of(Integer value) {
 		for (ChatroomStatus target : ChatroomStatus.values()) {
 			if (target.value == value) {
 				return target;

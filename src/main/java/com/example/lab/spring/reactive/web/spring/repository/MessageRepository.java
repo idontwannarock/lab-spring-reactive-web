@@ -3,6 +3,7 @@ package com.example.lab.spring.reactive.web.spring.repository;
 import com.example.lab.spring.reactive.web.app.domain.MessageStatus;
 import com.example.lab.spring.reactive.web.app.gateway.MessageDataGateway;
 import com.example.lab.spring.reactive.web.spring.data.dao.MessageDao;
+import com.example.lab.spring.reactive.web.spring.data.po.MessageFullInfoView;
 import com.example.lab.spring.reactive.web.spring.data.po.MessagePo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -30,7 +31,7 @@ public class MessageRepository implements MessageDataGateway {
 		return messageDao.save(message).map(MessagePo::getId);
 	}
 
-	public Flux<MessagePo> findAllByChatroomId(Long chatroomId) {
-		return messageDao.findAllByChatroomId(chatroomId);
+	public Flux<MessageFullInfoView> findAllByChatroomId(Long chatroomId) {
+		return messageDao.findAllFullViewByChatroomId(chatroomId);
 	}
 }

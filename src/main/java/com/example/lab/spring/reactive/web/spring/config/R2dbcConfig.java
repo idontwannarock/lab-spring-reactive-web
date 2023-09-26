@@ -1,9 +1,6 @@
 package com.example.lab.spring.reactive.web.spring.config;
 
-import com.example.lab.spring.reactive.web.spring.data.po.converter.ChatroomStatusConverter;
-import com.example.lab.spring.reactive.web.spring.data.po.converter.ChatroomUserRoleConverter;
-import com.example.lab.spring.reactive.web.spring.data.po.converter.InstantConverter;
-import com.example.lab.spring.reactive.web.spring.data.po.converter.MessageStatusConverter;
+import com.example.lab.spring.reactive.web.spring.data.po.converter.*;
 import io.r2dbc.spi.ConnectionFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +32,7 @@ class R2dbcConfig extends AbstractR2dbcConfiguration {
 			new MessageStatusConverter.WriteConverter(),
 			new MessageStatusConverter.ReadConverter(),
 			new InstantConverter.WriteConverter(),
-			new InstantConverter.ReadConverter());
+			new InstantConverter.ReadConverter(),
+			new MessageFullInfoViewConverter());
 	}
 }
