@@ -2,13 +2,12 @@ package com.example.lab.spring.reactive.web.spring.config;
 
 import io.asyncer.r2dbc.mysql.MySqlConnectionConfiguration;
 import io.asyncer.r2dbc.mysql.MySqlConnectionFactory;
-import io.r2dbc.pool.ConnectionPool;
-import io.r2dbc.pool.ConnectionPoolConfiguration;
 import io.r2dbc.proxy.ProxyConnectionFactory;
 import io.r2dbc.proxy.support.QueryExecutionInfoFormatter;
 import io.r2dbc.spi.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -22,6 +21,7 @@ import java.time.ZoneId;
 @Configuration
 class ConnectionConfig {
 
+	@ConditionalOnProperty(name = "logging.connection-detail")
 	@Bean
 	ConnectionFactory connectionFactory(
 		@Value("${spring.r2dbc.host}") String host,
@@ -29,8 +29,7 @@ class ConnectionConfig {
 		@Value("${spring.r2dbc.name}") String database,
 		@Value("${spring.r2dbc.username}") String username,
 		@Value("${spring.r2dbc.password}") String password,
-		@Value("${spring.r2dbc.connection-timeout-in-seconds}") long connectionTimeout,
-		@Value("${logging.connection-detail}") Boolean logConnectionDetail) {
+		@Value("${spring.r2dbc.connection-timeout-in-seconds}") long connectionTimeout) {
 		ConnectionFactory original = MySqlConnectionFactory.from(MySqlConnectionConfiguration.builder()
 			.host(host)
 			.port(port)
@@ -42,32 +41,10 @@ class ConnectionConfig {
 			.tcpKeepAlive(true)
 			.build());
 
-		if (Boolean.TRUE.equals(logConnectionDetail)) {
-			QueryExecutionInfoFormatter formatter = QueryExecutionInfoFormatter.showAll();
-			return ProxyConnectionFactory.builder(original)
-				.onAfterQuery(queryInfo -> log.info(formatter.format(queryInfo)))
-				.build();
-		}
-		return original;
-	}
-
-	@Bean
-	ConnectionPool connectionPool(
-		ConnectionFactory connectionFactory,
-		@Value("${spring.r2dbc.pool.initial-size}") int initSize,
-		@Value("${spring.r2dbc.pool.min-idle}") int minIdle,
-		@Value("${spring.r2dbc.pool.max-size}") int maxSize,
-		@Value("${spring.r2dbc.pool.max-idle-time-in-seconds}") int maxIdleTime,
-		@Value("${spring.r2dbc.pool.max-life-time-in-seconds}") int maxLifeTime) {
-		return new ConnectionPool(ConnectionPoolConfiguration.builder()
-			.connectionFactory(connectionFactory)
-			.initialSize(initSize)
-			.minIdle(minIdle)
-			.maxSize(maxSize)
-			.maxIdleTime(Duration.ofSeconds(maxIdleTime))
-			.maxLifeTime(Duration.ofSeconds(maxLifeTime))
-			.validationQuery("SET NAMES utf8mb4")
-			.build());
+		QueryExecutionInfoFormatter formatter = QueryExecutionInfoFormatter.showAll();
+		return ProxyConnectionFactory.builder(original)
+			.onBeforeQuery(queryInfo -> log.info(formatter.format(queryInfo)))
+			.build();
 	}
 
 	@Bean
