@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "logging.query-detail",
+      "type": "java.lang.Boolean",
+      "description": "Switch to turn on/off logging the query details."
+    }
+  ]
+}

@@ -63,8 +63,12 @@
         <!-- Distributed Tracing -->
         <dependency>
             <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+            <artifactId>micrometer-tracing</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>io.micrometer</groupId>-->
+<!--            <artifactId>micrometer-tracing-bridge-otel</artifactId>-->
+<!--        </dependency>-->
 
         <!-- JWT -->
         <dependency>
